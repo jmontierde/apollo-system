@@ -30,7 +30,7 @@
 			<v-chip color="blue">Card</v-chip>
 		</h3>
 		<v-card class="mx-auto my-12" max-width="374">
-			<template #progress>
+			<template progress>
 				<v-progress-linear color="deep-purple" height="10" indeterminate />
 			</template>
 
@@ -74,24 +74,62 @@
 				<v-btn color="deep-purple lighten-2">Reserve</v-btn>
 			</v-card-actions>
 		</v-card>
-		<h3 class="my-5">
-			Example Vuetify
-			<v-chip color="blue">SimpleTable</v-chip>
-			<v-chip color="orange">Data from spaceX graphql</v-chip>
-		</h3>
-		<p>There are {{ ships?.length || 0 }} ships.</p>
+
+		<div class="d-flex align-center justify-center mb-4">
+			<v-select v-model="selectedYear" :items="availableYears" label="Filter by Year" clearable />
+
+			<v-btn
+				@click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'"
+				class="ml-4"
+				color="#fff"
+			>
+				Sort {{ sortDirection === 'asc' ? '↑' : '↓' }}
+			</v-btn>
+		</div>
+		<div class="d-flex justify-space-between">
+			<div>
+				<h3 class="my-5">
+					Example Vuetify
+					<v-chip color="blue">SimpleTable</v-chip>
+					<v-chip color="orange">Data from spaceX graphql</v-chip>
+				</h3>
+				<p>There are {{ launches?.length || 0 }} launches.</p>
+			</div>
+			<div>
+				<nuxt-link to="/favorites" class="text-blue-500 hover:underline">Favorites</nuxt-link>
+			</div>
+		</div>
+
 		<v-table>
 			<thead>
 				<tr>
-					<th class="text-left">Name</th>
-					<th class="text-left">Active</th>
+					<th class="text-left">Mission Name</th>
+					<th class="text-left">Launch Date</th>
+					<th class="text-left">Launch site name</th>
+					<th class="text-left">Rocket name</th>
+					<th class="text-left">Details</th>
+					<th class="text-left">Action</th>
+					<th class="text-left">Action</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="ship in ships" :key="ship.name">
-					<td>{{ ship.name }}</td>
+				<tr v-for="(launch, index ) in launches" :key="launch.id + '-' + index">
+					<td>{{ launch.mission_name }}</td>
+					<td>{{ launch.mission_name }}</td>
+					<td>{{ launch.launch_date_utc }}</td>
+					<td>{{ launch.launch_site?.site_name }}</td>
+					<td>{{ launch.rocket.rocket_name }}</td>
+					<td>{{ launch.details }}</td>
+					<td>{{ launch.rocket }}</td>
 					<td>
-						<v-chip :color="ship.active ? 'green' : 'red'">{{ ship.active }}</v-chip>
+						<v-card-actions>
+							<v-btn
+								:to="'/rockets/' + launch.id"
+								style="background-color: #1b5e20; color: white"
+							>
+								View
+							</v-btn>
+						</v-card-actions>
 					</td>
 				</tr>
 			</tbody>
@@ -99,13 +137,24 @@
 	</v-container>
 </template>
 <script lang="ts" setup>
+import { useLaunches } from '~/composable/useLaunches'
+
 const store = useCounter()
+
+console.log('store count', store)
+
 const selection = ref(0)
 const query = gql`
 	query getShips {
 		ships {
 			id
 			name
+			roles
+			model
+			type
+			missions {
+				flight
+			}
 			active
 		}
 	}
@@ -114,8 +163,25 @@ const { data } = useAsyncQuery<{
 	ships: {
 		id: string
 		name: string
+		roles: string
+		model: string
+		type: string
+		missions: {
+			flight: string
+		}
 		active: boolean
 	}[]
 }>(query)
 const ships = computed(() => data.value?.ships ?? [])
+
+console.log('ships data', ships)
+
+const { launches, selectedYear, sortDirection } = useLaunches()
+
+const availableYears = computed(() => {
+	const years = new Set(launches.value.map((launch) => new Date(launch.launch_date_utc).getFullYear()))
+	return Array.from(years).sort()
+})
+
+console.log('launches return', launches)
 </script>
