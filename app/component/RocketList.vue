@@ -1,39 +1,55 @@
 <template>
-    <div>
-      <h3>{{ rocket.name }}</h3>
-      <!-- <button @click="toggleFavorite">
-        {{ isFavorite ? 'Remove from Favorites' : 'Add to Favorites' }}
-      </button> -->
-    </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { useFavoritesStore } from '../stores/useFavoritesStore';
-  import { computed } from 'vue';
-  
-  // Props for the component
-  defineProps({
-    rocket: {
-      type: Object,
-      required: true,
-    },
-  });
-  
-  const favoritesStore = useFavoritesStore();
+  <v-row>
+    <v-col cols="4" md="4" v-for="(item, index) in rockets" :key="index">
+      <v-card class="mx-auto my-12" max-width="374">
+        <template progress>
+          <v-progress-linear color="deep-purple" height="10" indeterminate />
+        </template>
+        <v-card-title>{{ item.name }}</v-card-title>
+        <v-card-text>
+          <div>{{ item.launchId }}</div>
+          <div>{{ item.description }}</div>
+          <div>First flight date: {{ item.first_flight }}</div>
+          <div>Height: {{ item.height.feet }}ft and {{ item.height.meters }}m</div>
+          <div>Diameter: {{ item.diameter.feet }}ft and {{ item.diameter.meters }}m</div>
+          <div>Mass: {{ item.mass.kg }}kg and {{ item.mass.lb }}lb</div>
+          <div>Stages: {{ item.stages }}</div>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="deep-purple lighten-2" @click="deleteRocket(item.launchId)">Delete</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-col>
+  </v-row>
+</template>
 
-    console.log(favoritesStore.favoriteRockets)
+<script lang="ts" setup>
+import { defineProps, defineEmits } from 'vue';
 
+interface Rocket {
+  name: string;
+  launchId: string;
+  description: string;
+  first_flight: string;
+  height: { feet: number; meters?: number };
+  diameter: { feet: number; meters?: number };
+  mass: { kg: number; lb: number };
+  stages: number;
+}
 
-  // const isFavorite = computed(() =>
-  //   favoritesStore.favoriteRockets.some(r => r.id === rocket.id)
-  // );
-  
-  // const toggleFavorite = () => {
-  //   if (isFavorite.value) {
-  //     favoritesStore.removeFavorite(rocket.id);
-  //   } else {
-  //     favoritesStore.addFavorite(rocket);
-  //   }
-  // };
-  </script>
-  
+defineProps({
+  rockets: {
+    type: Array as () => Rocket[],
+    required: true,
+  },
+});
+
+const emit = defineEmits(['delete']);
+
+const deleteRocket = (id: string | undefined) => {
+  if (id) {
+    emit('delete', id);
+  }
+};
+</script>
+

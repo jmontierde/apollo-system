@@ -62,4 +62,5 @@ export type Rocket = {
     diameter: Distance
     mass: Mass
     stages: number;
+    launchId: string; 
 }
