@@ -3,7 +3,7 @@ import { useRoute } from 'vue-router';
 
 export const useRocket = () => {
   const route = useRoute();
-  const rocketId = route.params.id; // This is your launchId.
+  const launchId = typeof route.params.id === 'string' ? route.params.id : '';
 
   const query = gql`
     query Rocket($launchId: ID!) {
@@ -32,18 +32,22 @@ export const useRocket = () => {
     }
   `;
 
-  // Use the correct variable name in `useAsyncQuery`.
   const { data } = useAsyncQuery<{ launch: { rocket: { rocket: Rocket } } }>(query, {
-    launchId: rocketId, // Match the variable name `launchId`.
+    launchId: launchId, 
   });
 
-  console.log('data', data);
 
-  // Update the computed property to access the correct nested structure.
-  const rocket = computed(() => data.value?.launch?.rocket?.rocket || null);
+  const rocket = computed(() => {
+    if (data.value?.launch?.rocket?.rocket) {
+      return {
+        ...data.value.launch.rocket.rocket,
+        launchId,
+      };
+    }
+    return null;
+  });
 
-  console.log('rocketId', rocketId);
-  console.log('ROCKETTT', rocket);
+  console.log("Rocket with launchId attached:", rocket);
 
   return { rocket };
 };

@@ -7,14 +7,16 @@ export const useFavoritesStore = defineStore('favorites', {
   }),
 
   actions: {
-    addFavorite(index: number, launches: Rocket[]) {
-      const rocket = launches[index];
-      if (rocket && !this.favoriteRockets.find(r => r.id === rocket.id)) {
+    addFavorite(rocket: Rocket) {
+      if (!this.favoriteRockets.find(r => r.launchId === rocket.launchId)) {
         this.favoriteRockets.push(rocket);
       }
     },
     removeFavorite(rocketId: string) {
-      this.favoriteRockets = this.favoriteRockets.filter(r => r.id !== rocketId);
+      this.favoriteRockets = this.favoriteRockets.filter(r => {
+        return r.launchId !== rocketId;
+      });
+    
     },
     clearFavorites() {
       this.favoriteRockets = [];

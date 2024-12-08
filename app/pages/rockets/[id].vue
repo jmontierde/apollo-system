@@ -32,9 +32,8 @@
         </v-card-text>
         <v-card-actions>
           <v-btn
-            @click="toggleFavorite"
             style="background-color: #D50000; color: white;"
-            
+            @click="toggleFavorite"
           >
             Add to Favorites
             <!-- {{ isFavorite ? 'Remove from Favorites' : 'Add to Favorites' }} -->
@@ -45,51 +44,34 @@
   </template>
   
   <script setup lang="ts">
-import { useRocket } from '~/composable/useRocket';
+  import { useRocket } from '~/composable/useRocket';
+  import { useFavoritesStore } from '../../stores/useFavoritesStore';
+  import { computed } from 'vue';
+  import { useRoute } from 'vue-router';
+  
+  const route = useRoute();
+  const rocket = useRocket();
+  const favoritesStore = useFavoritesStore();
 
-  const route = useRoute()
-  const favoritesStore = useFavoritesStore()
-
-  const store = useCounter()
+  console.log("rocket", rocket)
 
   console.log("favoritesStore", favoritesStore.favoriteRockets)
-
   
-  const rocket = useRocket();
-  const index = Number(route.params.id);
-
-  console.log("rocketrocketrocketrocket", rocket)
-
-
-  const isFavorite = computed(() => 
-  favoritesStore.favoriteRockets.some(r => r.id === rocket.rocket.value?.id)
-);
-
-
-
+  const isFavorite = computed(() =>
+    favoritesStore.favoriteRockets.some(r => r.launchId === route.params.id)
+  );
 
   
   const toggleFavorite = () => {
   if (rocket.rocket.value) {
     if (isFavorite.value) {
-      console.log("Rocket is already in favorites:", rocket.rocket.value);
+      favoritesStore.removeFavorite(rocket.rocket.value.id)
     } else {
-      console.log("Added to favorites:", rocket.rocket.value);
+      favoritesStore.addFavorite(rocket.rocket.value)
     }
-  } else {
-    console.error("No rocket value found!");
   }
+}
 
-  watch(
-  () => favoritesStore.favoriteRockets,
-  (newValue) => {
-    console.log('favoriteRockets changed:', newValue);
-  },
-  { deep: true }
-);
-
-};
-
-
-console.log("Updated favoriteRockets:", favoritesStore.favoriteRockets);
+  console.log("Updated favoriteRockets:", favoritesStore.favoriteRockets);
   </script>
+  
