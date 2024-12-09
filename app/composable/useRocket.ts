@@ -33,7 +33,7 @@ export const useRocket = () => {
   `;
 
   const { data } = useAsyncQuery<{ launch: { rocket: { rocket: Rocket } } }>(query, {
-    launchId: launchId, 
+    launchId: launchId,
   });
 
 

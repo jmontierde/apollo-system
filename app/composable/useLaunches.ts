@@ -77,7 +77,7 @@ export const useLaunches = () => {
 //         site_name
 //         site_name_long
 //       }
-//       rocket { 
+//       rocket {
 //         rocket_name
 //       }
 //       details
@@ -95,4 +95,3 @@ export const useLaunches = () => {
 //     console.log("launches", launches)
 //     return launches
 // }
-  
