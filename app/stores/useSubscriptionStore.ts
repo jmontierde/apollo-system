@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 
 export const useSubscriptionStore = defineStore('subscriptions', {
     state: () => ({
-        subscriptions: [] as string[], // Ensure typing
+        subscriptions: [] as string[], 
     }),
     actions: {
         addSubscription(email: string) {

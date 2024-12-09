@@ -6,7 +6,6 @@ export const useLaunches = () => {
   const selectedYear = ref<number | null>(null);
   const sortDirection = ref<'asc' | 'desc'>('desc');
 
-  // Fetch the data with the query
   const { data } = useAsyncQuery<LaunchQueryResult>(gql`
     query GetLaunches {
       launches {
@@ -65,33 +64,3 @@ export const useLaunches = () => {
 
 
 
-// export function useLaunches() {
-//   const queryLaunches = gql`
-//   query getLaunches {
-//     launches {
-//       id
-//       mission_name
-//       launch_date_utc
-//       launch_site {
-//         site_id
-//         site_name
-//         site_name_long
-//       }
-//       rocket {
-//         rocket_name
-//       }
-//       details
-//     }
-//   }
-// `
-
-// const date = useDate();
-
-//   const { data:launchesData } = useAsyncQuery<{
-//     launches: Launch[]
-//   }>(queryLaunches)
-//     const launches = computed(() => launchesData.value?.launches?? [])
-
-//     console.log("launches", launches)
-//     return launches
-// }

@@ -1,4 +1,3 @@
-// File: types/launch.ts
 interface LaunchSite {
     site_id: string
     site_name: string
