@@ -43,13 +43,11 @@ watch(subscriptions, (newSubs) => {
 
 const handleSubscription = () => {
 	subscriptionStore.addSubscription(email.value)
-	alert(`Subscription added for: ${email.value}`)
 	email.value = ''
 }
 
 const clearSubscriptions = () => {
 	subscriptionStore.clearSubscriptions()
-	alert('Subscriptions cleared!')
 	console.log('Subscriptions cleared:', subscriptionStore.subscriptions)
 }
 </script>
