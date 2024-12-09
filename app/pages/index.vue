@@ -22,7 +22,7 @@
 				<p>There are {{ launches?.length || 0 }} launches.</p>
 			</div>
 			<div>
-				<nuxt-link to="/favorites" class="text-blue-500 hover: mr-3">
+				<nuxt-link to="/subscriptions" class="text-blue-500 hover: mr-3">
 					<v-chip color="green">Subscriptions</v-chip>
 				</nuxt-link>
 				<nuxt-link to="/favorites" class="text-blue-500 hover:underline">
