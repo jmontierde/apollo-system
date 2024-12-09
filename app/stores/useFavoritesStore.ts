@@ -16,7 +16,7 @@ export const useFavoritesStore = defineStore('favorites', {
       this.favoriteRockets = this.favoriteRockets.filter(r => {
         return r.launchId !== rocketId;
       });
-    
+
     },
     clearFavorites() {
       this.favoriteRockets = [];
